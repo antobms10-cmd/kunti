@@ -115,6 +115,8 @@
 
     .login-animation.show {
       display: block;
+      -webkit-animation: revealAnimation 0.6s ease-out forwards,
+                         loginAnimationLoop 1.2s ease-in-out 0.6s infinite alternate;
       animation: revealAnimation 0.6s ease-out forwards,
                  loginAnimationLoop 1.2s ease-in-out 0.6s infinite alternate;
     }
@@ -608,7 +610,10 @@
         loginScreen.classList.add('hidden');
         // Enable the main content
         document.querySelector('.bubbles').style.opacity = '1';
-        document.querySelector('canvas').style.opacity = '1';
+        const canvas = document.querySelector('canvas');
+        if (canvas) {
+          canvas.style.opacity = '1';
+        }
         
         // Show birthday greetings
         const birthdayLeft = document.getElementById('birthdayLeft');
