@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>earlliee</title>
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    /* Login Screen Styling */
+    .login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a0033 0%, #330066 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    .login-container {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(255, 20, 147, 0.3);
+      border: 2px solid #ff1493;
+      text-align: center;
+      min-width: 300px;
+    }
+
+    .login-container h1 {
+      color: #ff1493;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+      text-shadow: 0 0 20px rgba(255, 20, 147, 0.8);
+    }
+
+    .login-container p {
+      color: #ffb6c1;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+
+    .login-input-group {
+      margin-bottom: 20px;
+    }
+
+    .login-input-group label {
+      display: block;
+      color: #ffb6c1;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .login-input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ff1493;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 1em;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+
+    .login-input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .login-input-group input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 15px rgba(255, 20, 147, 0.6);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #ff1493, #ff69b4);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 20, 147, 0.6);
+    }
+
+    .login-error {
+      color: #ff6b6b;
+      margin-top: 15px;
+      display: none;
+      font-weight: bold;
+    }
+
+    .login-animation {
+      display: none;
+      width: 180px;
+      max-width: 100%;
+      margin: 18px auto 0;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.7);
+    }
+
+    .login-animation.show {
+      display: block;
+      animation: revealAnimation 0.6s ease-out forwards,
+                 loginAnimationLoop 1.2s ease-in-out 0.6s infinite alternate;
+    }
+
+    @keyframes revealAnimation {
+      from {
+        opacity: 0;
+        transform: scale(0.5) rotate(-8deg);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes loginAnimationLoop {
+      from {
+        transform: scale(1) rotate(-3deg);
+      }
+      to {
+        transform: scale(1.08) rotate(3deg);
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Birthday Greetings Animation */
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-100px) rotateY(90deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0deg);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px) rotateY(-90deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0deg);
+      }
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% {
+        opacity: 0.7;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* Fireworks Animation */
+    @keyframes fireworks {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+      }
+    }
+
+    .fireworks-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 300;
+      pointer-events: none;
+    }
+
+    .firework {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fireworks 1.5s ease-out forwards;
+    }
+
+    .firework.gold { background: #FFD700; box-shadow: 0 0 10px #FFD700; }
+    .firework.pink { background: #ff1493; box-shadow: 0 0 10px #ff1493; }
+    .firework.cyan { background: #00ffff; box-shadow: 0 0 10px #00ffff; }
+    .firework.lime { background: #00ff00; box-shadow: 0 0 10px #00ff00; }
+
+    .birthday-left, .birthday-right {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.6em;
+      font-weight: bold;
+      text-shadow: 0 0 20px rgba(255, 20, 147, 0.8),
+                   0 0 40px rgba(255, 105, 180, 0.6);
+      z-index: 500;
+      color: #ff1493;
+      pointer-events: none;
+      opacity: 0;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
+    .birthday-left {
+      left: 15px;
+      animation: slideInLeft 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation-delay: 0.3s;
+    }
+
+    .birthday-right {
+      right: 15px;
+      animation: slideInRight 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation-delay: 0.5s;
+    }
+
+    .birthday-left.show,
+    .birthday-right.show {
+      animation: slideInLeft 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, pulse 2s ease-in-out 1.5s infinite;
+    }
+
+    .birthday-right.show {
+      animation: slideInRight 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, pulse 2s ease-in-out 1.5s infinite;
+    }
+
+    /* Hope Messages */
+    .hope-message {
+      position: fixed;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-shadow: 0 0 15px rgba(255, 20, 147, 0.7),
+                   0 0 30px rgba(255, 105, 180, 0.5);
+      z-index: 400;
+      color: #ff69b4;
+      pointer-events: none;
+      opacity: 0;
+      white-space: nowrap;
+      letter-spacing: 1px;
+      animation: slideInDown 1s ease-out forwards, fadeInOut 2s ease-in-out 1s infinite;
+    }
+
+    .hope-message.show {
+      opacity: 1;
+    }
+
+    .hope-1 {
+      top: 15%;
+      left: 5%;
+      animation-delay: 0.8s;
+    }
+
+    .hope-2 {
+      top: 35%;
+      right: 5%;
+      animation-delay: 1.2s;
+    }
+
+    .hope-3 {
+      bottom: 15%;
+      right: 5%;
+      animation-delay: 1.6s;
+    }
+
+    .hope-4 {
+      top: 70%;
+      left: 5%;
+      animation-delay: 2s;
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- Fireworks Container -->
+  <div class="fireworks-container" id="fireworksContainer"></div>
+
+  <!-- Birthday Greetings -->
+  <div class="birthday-left" id="birthdayLeft">Selamat Ulang Tahun</div>
+  <div class="birthday-right" id="birthdayRight">Happy Birthday</div>
+
+  <!-- Hope Messages -->
+  <div class="hope-message hope-1" id="hope1">Bahagia Selalu</div>
+  <div class="hope-message hope-2" id="hope2">Panjang Umur</div>
+  <div class="hope-message hope-3" id="hope3">Impian Terwujud</div>
+  <div class="hope-message hope-4" id="hope4">Penuh Berkah</div>
+
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-container">
+      <h1>💖</h1>
+      <h2 style="color: #ff1493; margin-bottom: 20px;">Untuk Kamu</h2>
+      <p>Masukkan password untuk melanjutkan</p>
+      <div class="login-input-group">
+        <input type="text" id="passwordInput" placeholder="Masukkan kata sandi" />
+      </div>
+      <button class="login-btn" onclick="checkPassword()">MASUK</button>
+      <div class="login-error" id="loginError"></div>
+      <img class="login-animation" id="loginAnimation" src="./ANIMASI.gif" alt="Animasi kejutan" />
+    </div>
+  </div>
+
+  <div class="bubbles">
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+    </div>
+    <div class="bubble"><svg class="heart" viewBox="0 0 32 32">
+        <title>heart22</title>
+        <path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+      </svg>
+<script>
+  const svg_terrain = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512px' height='512px' viewBox='0 0 512 512'%3E%3Cpath id='パス' fill='none' stroke='black' stroke-width='1' d='M 256.75,151.50 C 256.75,151.50 263.33,132.67 263.33,132.67 263.33,132.67 272.00,110.67 272.00,110.67 272.00,110.67 283.33,97.33 283.33,97.33 283.33,97.33 296.67,81.33 296.67,81.33 296.67,81.33 314.67,66.00 314.67,66.00 314.67,66.00 332.67,56.67 332.67,56.67 332.67,56.67 350.67,52.00 350.67,52.00 350.67,52.00 374.00,46.00 374.00,46.00 374.00,46.00 392.67,47.33 392.67,47.33 392.67,47.33 416.67,51.33 416.67,51.33 416.67,51.33 435.33,57.33 435.33,57.33 435.33,57.33 456.67,67.33 456.67,67.33 456.67,67.33 472.00,80.00 472.00,80.00 472.00,80.00 485.33,96.67 485.33,96.67 485.33,96.67 495.33,114.67 495.33,114.67 495.33,114.67 504.00,132.67 504.00,132.67 504.00,132.67 510.00,152.67 510.00,152.67 510.00,152.67 509.33,176.00 509.33,176.00 509.33,176.00 508.00,207.33 508.00,207.33 508.00,207.33 497.33,252.67 497.33,252.67 497.33,252.67 484.00,285.33 484.00,285.33 484.00,285.33 467.33,318.00 467.33,318.00 467.33,318.00 446.67,343.33 446.67,343.33 446.67,343.33 426.67,365.33 426.67,365.33 426.67,365.33 404.67,384.67 404.67,384.67 404.67,384.67 380.67,402.00 380.67,402.00 380.67,402.00 358.67,418.67 358.67,418.67 358.67,418.67 328.67,433.33 328.67,433.33 328.67,433.33 307.33,446.67 307.33,446.67 307.33,446.67 284.67,454.00 284.67,454.00 284.67,454.00 257.33,464.67 257.33,464.67 257.33,464.67 224.00,450.67 224.00,450.67 224.00,450.67 194.00,438.67 194.00,438.67 194.00,438.67 173.33,428.00 173.33,428.00 173.33,428.00 146.00,412.00 146.00,412.00 146.00,412.00 122.67,393.33 122.67,393.33 122.67,393.33 95.33,374.00 95.33,374.00 95.33,374.00 72.00,351.33 72.00,351.33 72.00,351.33 50.67,325.33 50.67,325.33 50.67,325.33 39.33,307.33 39.33,307.33 39.33,307.33 25.33,285.33 25.33,285.33 25.33,285.33 14.00,259.33 14.00,259.33 14.00,259.33 4.00,229.33 4.00,229.33 4.00,229.33 2.00,209.33 2.00,209.33 2.00,209.33 0.67,175.33 0.67,175.33 0.67,175.33 2.67,151.33 2.67,151.33 2.67,151.33 10.67,126.67 10.67,126.67 10.67,126.67 19.33,110.00 19.33,110.00 19.33,110.00 34.00,85.33 34.00,85.33 34.00,85.33 52.00,71.33 52.00,71.33 52.00,71.33 76.00,56.67 76.00,56.67 76.00,56.67 106.67,45.33 106.67,45.33 106.67,45.33 132.00,45.33 132.00,45.33 132.00,45.33 161.33,50.67 161.33,50.67 161.33,50.67 178.67,56.67 178.67,56.67 178.67,56.67 198.67,67.33 198.67,67.33 198.67,67.33 216.67,78.67 216.67,78.67 216.67,78.67 230.00,95.33 230.00,95.33 230.00,95.33 240.00,110.67 240.00,110.67 240.00,110.67 248.53,129.37 248.53,129.37 248.53,129.37 251.65,140.15 251.65,140.15 251.65,140.15 255.75,151.50 255.75,151.50 255.75,151.50 259.33,0.67 259.33,0.67 259.33,0.67 0.28,0.57 0.28,0.57 0.28,0.57 -0.85,511.81 -0.85,511.81 -0.85,511.81 511.52,511.81 511.52,511.81 511.52,511.81 512.00,-0.50 512.00,-0.50 512.00,-0.50 263.00,0.50 263.00,0.50 263.00,0.50 256.75,151.50 256.75,151.50 Z' /%3E%3C/svg%3E";
+  const svg_heart = "data:image/svg+xml,%3Csvg id='_x32_' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='512px' height='512px' viewBox='0 0 512 512' style='width: 512px; height: 512px; opacity: 1;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%234B4B4B;%7D %3C/style%3E%3Cg%3E%3Cpath class='st0' d='M384,46.469c-70.688,0-128,57.313-128,128.016c0-70.703-57.313-128.016-128-128.016S0,103.781,0,174.484 c0,66.484,31.313,193.391,218.563,276.234c11.844,5.25,35.703,14.469,35.703,14.469c0.547,0.219,1.141,0.344,1.734,0.344 s1.188-0.125,1.734-0.344c0,0,23.859-9.219,35.703-14.469C480.688,367.875,512,240.969,512,174.484 C512,103.781,454.688,46.469,384,46.469z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E";
+</script>
+
+  <audio id="bgm" loop style="position: fixed !important; bottom: 20px !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 1000 !important; background: rgba(0,0,0,0.7) !important; padding: 10px !important; border-radius: 8px !important; width: auto !important; max-width: 300px !important;">
+    <source src="./shape-of-my-heart-reff.mp3.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <audio id="kuntilanakSound" preload="auto">
+    <source src="./KUNTILANAK.mp3.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Audio player controller
+    const audioPlayer = document.getElementById('bgm');
+    
+    // Ensure styling is applied
+    setTimeout(() => {
+      audioPlayer.style.cssText = 'position: fixed !important; bottom: 20px !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 1000 !important; background: rgba(0,0,0,0.7) !important; padding: 10px !important; border-radius: 8px !important; width: auto !important; max-width: 300px !important;';
+    }, 100);
+    
+    // Add controls dynamically
+    audioPlayer.controls = true;
+    
+    // Don't auto-play on load - wait for password verification
+    // Audio will be controlled by login handler only
+  </script>
+
+  <script>
+    // Fireworks Function
+    function createFireworks() {
+      const colors = ['gold', 'pink', 'cyan', 'lime'];
+      const container = document.getElementById('fireworksContainer');
+      
+      // Create fireworks in multiple bursts
+      for (let burst = 0; burst < 5; burst++) {
+        setTimeout(() => {
+          for (let i = 0; i < 40; i++) {
+            const firework = document.createElement('div');
+            firework.className = 'firework ' + colors[Math.floor(Math.random() * colors.length)];
+            
+            // Random starting position
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight * 0.5;
+            
+            firework.style.left = x + 'px';
+            firework.style.top = y + 'px';
+            
+            // Random direction
+            const angle = (Math.random() * Math.PI * 2);
+            const velocity = 5 + Math.random() * 10;
+            const tx = Math.cos(angle) * velocity * 30;
+            const ty = Math.sin(angle) * velocity * 30;
+            
+            firework.style.setProperty('--tx', tx + 'px');
+            firework.style.setProperty('--ty', ty + 'px');
+            
+            container.appendChild(firework);
+            
+            // Remove after animation
+            setTimeout(() => firework.remove(), 1500);
+          }
+        }, burst * 400);
+      }
+    }
+
+    // Login Handler
+    const CORRECT_PASSWORD = 'KUNTILANAK';
+    let wrongAttempts = 0;
+    const loginScreen = document.getElementById('loginScreen');
+    const passwordInput = document.getElementById('passwordInput');
+    const loginError = document.getElementById('loginError');
+    const kuntilanakSound = document.getElementById('kuntilanakSound');
+    const loginAnimation = document.getElementById('loginAnimation');
+    kuntilanakSound.loop = true;
+
+    function checkPassword() {
+      const enteredPassword = passwordInput.value;
+      
+      if (enteredPassword === CORRECT_PASSWORD) {
+        // Password correct - hide login screen
+        kuntilanakSound.pause();
+        kuntilanakSound.currentTime = 0;
+        loginScreen.classList.add('hidden');
+        // Enable the main content
+        document.querySelector('.bubbles').style.opacity = '1';
+        document.querySelector('canvas').style.opacity = '1';
+        
+        // Show birthday greetings
+        const birthdayLeft = document.getElementById('birthdayLeft');
+        const birthdayRight = document.getElementById('birthdayRight');
+        birthdayLeft.classList.add('show');
+        birthdayRight.classList.add('show');
+        
+        // Show hope messages
+        const hope1 = document.getElementById('hope1');
+        const hope2 = document.getElementById('hope2');
+        const hope3 = document.getElementById('hope3');
+        const hope4 = document.getElementById('hope4');
+        
+        setTimeout(() => hope1.classList.add('show'), 800);
+        setTimeout(() => hope2.classList.add('show'), 1200);
+        setTimeout(() => hope3.classList.add('show'), 1600);
+        setTimeout(() => hope4.classList.add('show'), 2000);
+        
+        // Create fireworks
+        setTimeout(() => createFireworks(), 500);
+        
+        // Auto play music AFTER password is verified
+        const audioPlayer = document.getElementById('bgm');
+        setTimeout(() => {
+          audioPlayer.play().catch(err => console.log('Autoplay error:', err));
+        }, 800);
+      } else {
+        wrongAttempts += 1;
+        const errorMessages = [
+          'SANDINYA SALAH SAYANG',
+          'SANDINYA SALAH TUAN PUTRI',
+          'EH SANDINYA ITU "KUTILANAK"'
+        ];
+        loginError.textContent = errorMessages[Math.min(wrongAttempts, errorMessages.length) - 1];
+        loginError.style.display = 'block';
+        if (wrongAttempts >= 3) {
+          loginAnimation.classList.add('show');
+          kuntilanakSound.currentTime = 0;
+          kuntilanakSound.play().catch(err => console.log('Sound error:', err));
+        }
+        passwordInput.value = '';
+        passwordInput.focus();
+        // Hide error after 3 seconds
+        setTimeout(() => {
+          loginError.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    // Allow Enter key to submit
+    passwordInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
+
+    // Focus on password input on load
+    window.addEventListener('load', () => {
+      passwordInput.focus();
+    });
+  </script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/poly-decomp@0.3.0/build/decomp.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
