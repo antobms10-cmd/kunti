@@ -377,29 +377,57 @@
   // If you need svg_terrain/svg_heart as data URIs, re-add them as full valid strings here.
 </script>
 
-  <audio id="bgm" loop style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(0,0,0,0.7); padding:6px; border-radius:6px;">
-    <source src="./shape-of-my-heart-reff.mp3" type="audio/mpeg">
+  <audio id="bgm" loop controls style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(0,0,0,0.7); padding:6px; border-radius:6px; display:none;">
     Your browser does not support the audio element.
   </audio>
-  <audio id="kuntilanakSound" preload="auto">
-    <source src="./KUNTILANAK.mp3" type="audio/mpeg">
+  <audio id="kuntilanakSound" preload="auto" style="display:none;">
+    Your browser does not support the audio element.
   </audio>
 
   <script>
-    // Audio player controller
+    // Audio player controller with existence checks to avoid 404 console errors
     // Defer DOM-sensitive work to load event to avoid null references
     window.addEventListener('load', () => {
       const audioPlayer = document.getElementById('bgm');
-      if (audioPlayer) {
-        // Ensure styling is applied (keep simple)
-        setTimeout(() => {
-          audioPlayer.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(0,0,0,0.7); padding:6px; border-radius:6px;';
-        }, 100);
-        // Add controls dynamically
-        audioPlayer.controls = true;
+      const kuntilanakSound = document.getElementById('kuntilanakSound');
+
+      // Helper to check if resource exists
+      async function resourceExists(url) {
+        try {
+          const res = await fetch(url, { method: 'HEAD' });
+          return res.ok;
+        } catch (e) {
+          return false;
+        }
       }
 
-      // Don't auto-play on load - wait for password verification
+      (async () => {
+        const bgmPath = './shape-of-my-heart-reff.mp3';
+        const kuntilanakPath = './KUNTILANAK.mp3';
+
+        if (audioPlayer) {
+          const ok = await resourceExists(bgmPath);
+          if (ok) {
+            audioPlayer.src = bgmPath;
+            audioPlayer.style.display = '';
+            audioPlayer.controls = true;
+          } else {
+            // hide audio player if file missing to prevent 404
+            audioPlayer.style.display = 'none';
+          }
+        }
+
+        if (kuntilanakSound) {
+          const ok2 = await resourceExists(kuntilanakPath);
+          if (ok2) {
+            kuntilanakSound.src = kuntilanakPath;
+            kuntilanakSound.style.display = '';
+            kuntilanakSound.loop = true;
+          } else {
+            kuntilanakSound.style.display = 'none';
+          }
+        }
+      })();
     });
   </script>
 
@@ -462,10 +490,13 @@
 
         if (enteredPassword === CORRECT_PASSWORD) {
           // Password correct - hide login screen
-          if (kuntilanakSound && !kuntilanakSound.paused) {
-            kuntilanakSound.pause();
-            kuntilanakSound.currentTime = 0;
-          }
+          try {
+            if (kuntilanakSound && !kuntilanakSound.paused) {
+              kuntilanakSound.pause();
+              kuntilanakSound.currentTime = 0;
+            }
+          } catch (e) { /* ignore */ }
+
           if (loginScreen) loginScreen.classList.add('hidden');
 
           // Enable the main content - guard elements
@@ -497,7 +528,9 @@
           // Auto play music AFTER password is verified
           const audioPlayer = document.getElementById('bgm');
           setTimeout(() => {
-            audioPlayer?.play().catch(err => console.log('Autoplay error:', err));
+            try {
+              audioPlayer?.play().catch(err => console.log('Autoplay error:', err));
+            } catch (e) { /* ignore */ }
           }, 800);
         } else {
           wrongAttempts += 1;
